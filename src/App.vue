@@ -199,6 +199,8 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+import VConsole from 'vconsole';
+
 export default {
   name: 'app',
   components: {
@@ -235,6 +237,10 @@ export default {
   created() {
     this.showLoader = true;
     this.showForecastLoader = true;
+
+
+ var vConsole = new VConsole();
+  console.log(vConsole);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -349,7 +355,8 @@ export default {
 
       this.forecast = forecast;
 
-      document.querySelector(".forecast-body").style.animation = 'animUp .5s forwards ease-out';
+      document.querySelector('.forecast-body').style.animation =
+        'animUp .5s forwards ease-out';
 
       this.showForecastLoader = false;
     },
@@ -621,7 +628,7 @@ main {
 .forecast div .forecast-right {
   height: 40px;
   // width: 30%;
-  flex: .6;
+  flex: 0.6;
 }
 
 .forecast-img {
@@ -652,7 +659,7 @@ main {
 }
 
 .result-content .right {
-    height: 80px;
+  height: 80px;
   width: 75%;
 }
 
