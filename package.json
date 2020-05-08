@@ -1,6 +1,6 @@
 {
   "name": "weather-vibe",
-  "description": "Weather with Music Player",
+  "description": "Weather Updates",
   "author": "Alvin Nario <narioalvin94@gmail.com>",
   "version": "0.1.0",
   "private": true,
@@ -10,7 +10,7 @@
     "lint": "vue-cli-service lint",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://narioalvin.github.io/vue-my-portfolio",
+  "homepage": "https://narioalvin.github.io/weather-vibe",
   "dependencies": {
     "core-js": "^3.6.4",
     "less": "^3.11.1",
