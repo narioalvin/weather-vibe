@@ -211,7 +211,7 @@ export default {
       weatherApiKey: '7d405bcc899a649d1f85f0ee632f9323',
       weatherApiUrlBase: 'https://api.openweathermap.org/data/2.5/',
       timezoneApiKey: 'XKNEC6T9OXH5',
-      timezoneUrlBase: 'http://api.timezonedb.com/v2.1/get-time-zone',
+      timezoneUrlBase: 'https://api.timezonedb.com/v2.1/get-time-zone',
       timezone: null,
       date: null,
       query: '',
@@ -614,12 +614,14 @@ main {
 
 .forecast div .forecast-left {
   height: 40px;
-  width: 70%;
+  // width: 70%;
+  flex: 2;
 }
 
 .forecast div .forecast-right {
   height: 40px;
-  width: 30%;
+  // width: 30%;
+  flex: .6;
 }
 
 .forecast-img {
