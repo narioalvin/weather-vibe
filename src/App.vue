@@ -1,13 +1,8 @@
 <template>
   <div @click="away()">
-    <!-- <Cloudy /> -->
     <div class="loader" v-if="showLoader">
       <div>
         <p>Getting your current location...</p>
-        <!-- <div class="loader-gif main-loader">
-          <span></span>
-          <span></span>
-        </div> -->
         <b-spinner variant="success" type="grow" label="Spinning"></b-spinner>
       </div>
     </div>
@@ -79,14 +74,11 @@
             <div style="text-transform: capitalize" class="weather">
               {{ weather.weather[0].description }}
             </div>
-            <!-- <Sunny v-if="background !== 'night'" /> -->
-            <!-- <Cloudy v-else /> -->
-            <!-- <SunnyCloud /> -->
-            <div style="height: 110px; position: relative; bottom: 10px;">
-              <img
-                width="150"
-                :src="require(`@/assets/weather-icons/${weather.$$icon}.svg`)"
-              />
+            <div>
+              <component
+                :is="weather.$$icon"
+                :size="weather.$$size"
+              ></component>
             </div>
 
             <div class="temp">{{ Math.round(weather.main.temp) }}°c</div>
@@ -123,20 +115,11 @@
                   </div>
 
                   <span class="forecast-img">
-                    <!-- <img
-                      width="26"
-                      v-bind:src="
-                        'http://openweathermap.org/img/wn/' +
-                          item.firstWeather.weather[0].icon +
-                          '.png'
-                      "
-                    /> -->
-                    <img
-                      width="45"
-                      :src="
-                        require(`@/assets/weather-icons/${item.firstWeather.$$icon}.svg`)
-                      "
-                    />
+
+                    <component
+                      :is="item.firstWeather.$$icon"
+                      :size="item.firstWeather.$$size"
+                    ></component>
                   </span>
                 </div>
                 <div class="forecast-right">
@@ -160,20 +143,10 @@
                   <div class="left">
                     <span>{{ collapseItem.$$time }}</span>
                     <span class="upcoming-img">
-                      <!-- <img
-                        width="26"
-                        v-bind:src="
-                          'http://openweathermap.org/img/wn/' +
-                            collapseItem.weather[0].icon +
-                            '.png'
-                        "
-                      /> -->
-                      <img
-                        width="45"
-                        :src="
-                          require(`@/assets/weather-icons/${collapseItem.$$icon}.svg`)
-                        "
-                      />
+                      <component
+                        :is="collapseItem.$$icon"
+                        :size="collapseItem.$$icon.$$size"
+                      ></component>
                     </span>
                   </div>
                   <div class="right">
@@ -194,12 +167,14 @@
 // import Sunny from '@/components/gifs/Sunny.vue';
 // import SunnyCloud from '@/components/gifs/SunnyCloud.vue';
 // import Cloudy from '@/components/gifs/Cloudy.vue';
+// import CloudyDay3 from '@/components/gifs/CloudyDay3.vue';
 // import Cloudy from '@/components/background/Cloudy.vue';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-import VConsole from 'vconsole';
+// import VConsole from 'vconsole';
+// Vue.use(CloudyDay3)
 
 export default {
   name: 'app',
@@ -207,6 +182,7 @@ export default {
     // Sunny,
     // SunnyCloud,
     // Cloudy,
+    // CloudyDay3
   },
   data() {
     return {
@@ -238,10 +214,6 @@ export default {
     this.showLoader = true;
     this.showForecastLoader = true;
 
-
- var vConsole = new VConsole();
-  console.log(vConsole);
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         fetch(
@@ -261,46 +233,47 @@ export default {
           });
       });
     }
+    // this.getTimezone(14.61, 121.02);
   },
   methods: {
     getWeatherIcon(value) {
       switch (value.weather[0].icon) {
         case '01d':
-          return 'day';
+          return 'Day';
         case '02d':
-          return 'cloudy-day-3';
+          return 'CloudyDay3';
         case '03d':
-          return value.clouds.all < 50 ? 'cloudy-day-3' : 'cloudy';
+          return value.clouds.all < 50 ? 'CloudyDay3' : 'Cloudy';
         case '04d':
-          return 'cloudy';
+          return 'Cloudy';
         case '09d':
-          return 'rainy-6';
+          return 'Rainy6';
         case '10d':
-          return 'rainy-1';
+          return 'Rainy1';
         case '11d':
-          return 'thunder';
+          return 'Thunder';
         case '13d':
-          return 'snowy-6';
+          return 'Snowy6';
         case '50d':
           return 'cloudy-day-1';
         case '01n':
-          return 'night';
+          return 'Night';
         case '02n':
-          return 'cloudy-night-3';
+          return 'CloudyNight3';
         case '03n':
-          return value.clouds.all < 50 ? 'cloudy-night-3' : 'cloudy';
+          return value.clouds.all < 50 ? 'CloudyNight3' : 'Cloudy';
         case '04n':
-          return 'cloudy-night-3';
+          return 'CloudyNight3';
         case '09n':
-          return 'rainy-6';
+          return 'Rainy6';
         case '10n':
-          return 'rainy-6';
+          return 'Rainy6';
         case '11n':
-          return 'thunder';
+          return 'Thunder';
         case '13n':
-          return 'snowy-6';
+          return 'Snowy6';
         default:
-          return 'cloudy-night-1';
+          return 'CloudyNight1';
       }
     },
     search(query) {
@@ -328,13 +301,18 @@ export default {
     insertToForecast(results) {
       const forecast = results.list
         .map((result) => {
-          const time = new Date(result.dt_txt);
-          result['$$time'] = time.toLocaleTimeString(navigator.language, {
+          let t = result.dt_txt.split(/[- :]/);
+          const d = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
+          const actiondate = new Date(d);
+
+          result['$$time'] = actiondate.toLocaleTimeString(navigator.language, {
             hour: '2-digit',
             minute: '2-digit',
           });
           result['$$day'] = this.dateBuilder(result.dt_txt, 'search');
           result['$$icon'] = this.getWeatherIcon(result);
+          result['$$size'] = 'small';
+
           return result;
         })
         .reduce(function(r, a) {
@@ -391,12 +369,13 @@ export default {
     },
     setResults(results) {
       results['$$icon'] = this.getWeatherIcon(results);
+      results['$$size'] = 'large';
       this.weather = results;
 
       this.getTimezone(results.coord.lat, results.coord.lon);
 
       let time = new Date();
-      time = time.toLocaleTimeString('en-GB');
+      time = time.toLocaleTimeString('en-GB', { timeZone: 'America/Adak' });
 
       if (time.substring(0, 2) >= 18 && this.weather.main.temp > 16) {
         this.background = 'night';
@@ -410,7 +389,10 @@ export default {
       }, 100);
     },
     dateBuilder(value, type) {
-      let d = new Date(value);
+      let t = value.split(/[- :]/);
+      const d = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
+      const actiondate = new Date(d);
+
       let months = [
         'January',
         'February',
@@ -434,10 +416,11 @@ export default {
         'Friday',
         'Saturday',
       ];
-      let day = days[d.getDay()];
-      let date = d.getDate();
-      let month = months[d.getMonth()];
-      let year = d.getFullYear();
+      let day = days[actiondate.getDay()];
+      let date = actiondate.getDate();
+      let month = months[actiondate.getMonth()];
+      let year = actiondate.getFullYear();
+
       if (type === 'search') {
         return `${day}`;
       } else {
@@ -545,8 +528,8 @@ main {
 }
 
 .forecast {
-  height: 260px;
-  max-width: 350px;
+  height: 320px;
+  max-width: 400px;
   background: rgba(0, 0, 0, 0.4);
   margin: 0 auto;
   border-radius: 5px;
@@ -574,7 +557,8 @@ main {
 
 .forecast-body {
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 330px;
+  padding: 20px 10px;
 }
 
 .forecast-content {
@@ -584,28 +568,28 @@ main {
 .forecast-content .forecast-data,
 .collapse-body .collapse-content {
   display: flex;
+  margin: 7px 15px 0 15px;
 }
 
 .collapse-body {
-  padding: 5px 10px;
   background: rgba(0, 0, 0, 0.5);
-  padding: 5px 5px 5px 22px;
+  padding: 5px 5px 10px 22px;
 }
 
 .collapse-content .left {
   height: 30px;
-  width: 70%;
+  flex: 2;
   font-size: 13px;
 }
 
 .collapse-content .right {
   height: 30px;
-  width: 30%;
+  flex: 0.6;
 }
 
 .collapse-content .right,
 .collapse-content .left {
-  padding: 10px;
+  // padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -613,7 +597,7 @@ main {
 
 .forecast div .forecast-left,
 .forecast div .forecast-right {
-  padding: 10px;
+  // padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -633,12 +617,12 @@ main {
 
 .forecast-img {
   position: relative;
-  right: 10px;
+  right: 40px;
 }
 
 .upcoming-img {
   position: relative;
-  right: 13px;
+  right: 42px;
 }
 
 .result-content {
@@ -719,7 +703,6 @@ main {
   color: #fff;
   font-size: 37px;
   font-weight: 900;
-  text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
 }
 .weather-box .weather {
