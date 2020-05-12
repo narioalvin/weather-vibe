@@ -1,13 +1,148 @@
 <template>
   <div @click="away()">
+    <!-- v-if="!proceed" -->
     <div class="loader" v-if="showLoader">
+        <!-- <div class="form-item" v-if="!showLoader">
+          <input
+            type="text"
+            id="user"
+            name="user"
+            v-model="userName"
+            required
+          />
+          <label for="user"><h6>What is your name?</h6></label>
+          <font-awesome-icon
+            @click="arrowClick()"
+            class="arrow-name"
+            :class="userName.length > 0 ? 'arrow-blue' : 'arrow-gray'"
+            :icon="['fas', 'arrow-circle-right']"
+          />
+        </div> -->
+        <div>
+          <p>Getting your current location...</p>
+          <b-spinner variant="success" type="grow" label="Spinning"></b-spinner>
+        </div>
+    </div>
+    <main :class="background.main">
+      <Night v-if="background.main === 'night'" />
+      <div
+        style="height: 62vh; display: flex; align-items: center; justify-content: center;
+    flex-direction: column;"
+        v-if="typeof weather.main != 'undefined'"
+      >
+        <h1 style="text-transform: capitalize;">{{ background.message }} {{ userName }}!</h1>
+        <!-- <h5>{{ date }}</h5> -->
+        <h5 style="text-transform: capitalize;">
+          {{ weather.name }} - {{ weather.weather[0].description }}
+        </h5>
+        <div>
+          <h1 style="font-size: 45px;">
+            {{ Math.round(weather.main.temp) }}°c
+          </h1>
+          <!-- <component :is="weather.$$icon" :size="weather.$$size"></component> -->
+        </div>
+
+        <img
+          class="sunny"
+          :src="require('./assets/img/' + background.centerImage + '.svg')"
+        />
+
+        <div style="position: relative; top: 10px">
+          <span>Play some Music</span>
+          <font-awesome-icon
+            class="mp3Button"
+            @click="play()"
+            :icon="
+              isMp3Playing ? ['fas', 'pause-circle'] : ['fas', 'play-circle']
+            "
+          />
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <div class="forecast">
+          <b-spinner
+            class="forecast-loader"
+            variant="light"
+            type="grow"
+            label="Spinning"
+            v-if="showForecastLoader"
+          ></b-spinner>
+          <div class="forecast-body" role="tab">
+            <div
+              class="forecast-content"
+              v-for="(item, index) in forecast"
+              :key="index"
+              v-b-toggle="index"
+              block
+            >
+              <div class="forecast-data" @click="forecastCollapse(item)">
+                <div class="forecast-left">
+                  <div>
+                    <font-awesome-icon
+                      class="when-closed"
+                      :icon="['fas', 'chevron-right']"
+                    />
+                    <font-awesome-icon
+                      class="when-opened"
+                      :icon="['fas', 'chevron-down']"
+                    />
+                    <span>{{ item.day }}</span>
+                  </div>
+
+                  <span class="forecast-img">
+                    <component
+                      :is="item.firstWeather.$$icon"
+                      :size="item.firstWeather.$$size"
+                    ></component>
+                  </span>
+                </div>
+                <div class="forecast-right">
+                  <span>{{ Math.round(item.firstWeather.main.temp_max) }}</span>
+                  <span
+                    >{{ Math.round(item.firstWeather.main.temp_min) }}°c</span
+                  >
+                </div>
+              </div>
+              <b-collapse
+                :id="index"
+                accordion="my-accordion"
+                role="tabpanel"
+                class="collapse-body"
+              >
+                <div
+                  class="collapse-content"
+                  v-for="(collapseItem, index) in item.upcoming"
+                  :key="index"
+                >
+                  <div class="left">
+                    <span>{{ collapseItem.$$time }}</span>
+                    <span class="upcoming-img">
+                      <component
+                        :is="collapseItem.$$icon"
+                        :size="collapseItem.$$icon.$$size"
+                      ></component>
+                    </span>
+                  </div>
+                  <div class="right">
+                    <span>{{ Math.round(collapseItem.main.temp_max) }}</span>
+                    <span>{{ Math.round(collapseItem.main.temp_min) }}°c</span>
+                  </div>
+                </div>
+              </b-collapse>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- <CloudyBackground /> -->
+    <!-- <div class="loader" v-if="showLoader">
       <div>
         <p>Getting your current location...</p>
         <b-spinner variant="success" type="grow" label="Spinning"></b-spinner>
       </div>
-    </div>
+    </div> -->
 
-    <div id="app" :class="background">
+    <!-- <div id="app" :class="background">
       <main>
         <div class="search-box">
           <div @click="$event.stopPropagation()">
@@ -62,28 +197,6 @@
           </div>
         </div>
 
-        <div class="weather-wrap" v-if="typeof weather.main != 'undefined'">
-          <div class="location-box">
-            <div class="location">
-              {{ weather.name }}, {{ weather.sys.country }}
-            </div>
-            <div class="date">{{ date }}</div>
-          </div>
-
-          <div class="weather-box">
-            <div style="text-transform: capitalize" class="weather">
-              {{ weather.weather[0].description }}
-            </div>
-            <div>
-              <component
-                :is="weather.$$icon"
-                :size="weather.$$size"
-              ></component>
-            </div>
-
-            <div class="temp">{{ Math.round(weather.main.temp) }}°c</div>
-          </div>
-        </div>
         <div class="forecast">
           <b-spinner
             class="forecast-loader"
@@ -100,89 +213,26 @@
               v-b-toggle="index"
               block
             >
-              <div class="forecast-data" @click="forecastCollapse(item)">
-                <div class="forecast-left">
-                  <div>
-                    <font-awesome-icon
-                      class="when-closed"
-                      :icon="['fas', 'chevron-right']"
-                    />
-                    <font-awesome-icon
-                      class="when-opened"
-                      :icon="['fas', 'chevron-down']"
-                    />
-                    <span>{{ item.day }}</span>
-                  </div>
-
-                  <span class="forecast-img">
-
-                    <component
-                      :is="item.firstWeather.$$icon"
-                      :size="item.firstWeather.$$size"
-                    ></component>
-                  </span>
-                </div>
-                <div class="forecast-right">
-                  <span>{{ Math.round(item.firstWeather.main.temp_max) }}</span>
-                  <span
-                    >{{ Math.round(item.firstWeather.main.temp_min) }}°c</span
-                  >
-                </div>
               </div>
-              <b-collapse
-                :id="index"
-                accordion="my-accordion"
-                role="tabpanel"
-                class="collapse-body"
-              >
-                <div
-                  class="collapse-content"
-                  v-for="(collapseItem, index) in item.upcoming"
-                  :key="index"
-                >
-                  <div class="left">
-                    <span>{{ collapseItem.$$time }}</span>
-                    <span class="upcoming-img">
-                      <component
-                        :is="collapseItem.$$icon"
-                        :size="collapseItem.$$icon.$$size"
-                      ></component>
-                    </span>
-                  </div>
-                  <div class="right">
-                    <span>{{ Math.round(collapseItem.main.temp_max) }}</span>
-                    <span>{{ Math.round(collapseItem.main.temp_min) }}°c</span>
-                  </div>
-                </div>
-              </b-collapse>
+         
             </div>
           </div>
         </div>
       </main>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-// import Sunny from '@/components/gifs/Sunny.vue';
-// import SunnyCloud from '@/components/gifs/SunnyCloud.vue';
-// import Cloudy from '@/components/gifs/Cloudy.vue';
-// import CloudyDay3 from '@/components/gifs/CloudyDay3.vue';
-// import Cloudy from '@/components/background/Cloudy.vue';
-
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
-// import VConsole from 'vconsole';
-// Vue.use(CloudyDay3)
+import Night from '@/components/background/Night.vue';
 
 export default {
   name: 'app',
   components: {
-    // Sunny,
-    // SunnyCloud,
-    // Cloudy,
-    // CloudyDay3
+    Night
   },
   data() {
     return {
@@ -190,13 +240,13 @@ export default {
       weatherApiUrlBase: 'https://api.openweathermap.org/data/2.5/',
       timezoneApiKey: 'XKNEC6T9OXH5',
       timezoneUrlBase: 'https://api.timezonedb.com/v2.1/get-time-zone',
+      ipstackUrlBase: 'http://api.ipstack.com/',
       timezone: null,
       date: null,
       query: '',
       weather: {},
-      audio: null,
       showLoader: false,
-      background: '',
+      background: {},
       searchResults: [],
       showResult: false,
       showResutLoader: false,
@@ -204,38 +254,68 @@ export default {
       showForecast: false,
       showForecastLoader: false,
       forecastIcon: '',
+      selected: '',
+      isMp3Playing: false,
+      userName: '',
+      proceed: false,
+      audio: new Audio(require('./assets/mp3/NoBetter.mp3')),
     };
   },
-  mounted() {
-    //  var audio = new Audio('http://soundbible.com/grab.php?id=1818&type=mp3');
-    // audio.play();
-  },
   created() {
+    this.background = {
+      main: '',
+      centerImage: '',
+      message: '',
+    };
+
     this.showLoader = true;
     this.showForecastLoader = true;
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
+    // fetch(
+    //   `https://api.openweathermap.org/data/2.5/weather?q=Makati City&units=metric&appid=${this.weatherApiKey}`
+    // )
+    //   .then((results) => {
+    //     return results.json();
+    //   })
+    //   .then((results) => {
+    //     // console.log(results);
+    //     this.setResults(results);
+    //   });
+
+    fetch(`http://www.geoplugin.net/json.gp`)
+      .then((results) => {
+        return results.json();
+      })
+      .then((result) => {
+
+        return result;
+      })
+      .then((location) => {
         fetch(
-          `${this.weatherApiUrlBase}weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&appid=${this.weatherApiKey}`
+          `${this.weatherApiUrlBase}weather?q=${location.geoplugin_city}&units=metric&appid=${this.weatherApiKey}`
         )
           .then((result) => {
             return result.json();
           })
-          .then(
-            this.getTimezone(
-              position.coords.latitude,
-              position.coords.longitude
-            )
-          )
           .then((results) => {
             this.setResults(results);
           });
       });
-    }
-    // this.getTimezone(14.61, 121.02);
+
   },
   methods: {
+    arrowClick() {
+      this.proceed = true;
+    },
+    play() {
+      this.isMp3Playing = !this.isMp3Playing;
+
+      if (this.isMp3Playing) {
+        this.audio.play();
+      } else {
+        this.audio.pause();
+      }
+    },
     getWeatherIcon(value) {
       switch (value.weather[0].icon) {
         case '01d':
@@ -327,15 +407,11 @@ export default {
             r[a.$$day]['upcoming'].push(element);
           });
           r[a.$$day]['firstWeather'] = r[a.$$day][0];
-
+          // console.log(r);
           return r;
         }, {});
 
       this.forecast = forecast;
-
-      document.querySelector('.forecast-body').style.animation =
-        'animUp .5s forwards ease-out';
-
       this.showForecastLoader = false;
     },
     fetchWeather() {
@@ -363,8 +439,7 @@ export default {
           return result.json();
         })
         .then((result) => {
-          this.timezone = result;
-          this.date = this.dateBuilder(result.formatted, 'normal');
+          return result;
         });
     },
     setResults(results) {
@@ -372,16 +447,44 @@ export default {
       results['$$size'] = 'large';
       this.weather = results;
 
+      //TODO get timezone on different countries
+
       this.getTimezone(results.coord.lat, results.coord.lon);
 
-      let time = new Date();
-      time = time.toLocaleTimeString('en-GB', { timeZone: 'America/Adak' });
+      let time = new Date().getHours();
 
-      if (time.substring(0, 2) >= 18 && this.weather.main.temp > 16) {
-        this.background = 'night';
-      } else {
-        this.background = 'warm';
+      switch (true) {
+          case time >= 6 && time < 12:
+          this.background = {
+            main: 'morning',
+            centerImage: 'morning',
+            message: 'Good Morning, ',
+          };
+          break;
+        case time >= 12 && time < 15:
+          this.background = {
+            main: 'afternoon',
+            centerImage: 'relax',
+            message: 'Good Afternoon, ',
+          };
+          break;
+        case time >= 15 && time < 18:
+           this.background = {
+            main: 'sunset',
+            centerImage: 'sunset',
+            message: 'Good Afternoon, ',
+          };
+          break;
+        case time >= 18:
+          this.background = {
+            main: 'night',
+            centerImage: 'night',
+            message: 'Good Evening, ',
+          };
+          break;
+  
       }
+
       this.searchForecast(this.weather);
 
       setTimeout(() => {
@@ -443,24 +546,128 @@ body {
   font-family: 'montserrat', sans-serif;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 0;
+}
 /* width */
 ::-webkit-scrollbar {
-  width: 5px;
+  display: none !important;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.arrow-name {
+  position: relative;
+  right: 20px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #aaaaaa;
+.arrow-blue {
+  color: #4dabf7;
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.arrow-gray {
+  color: #bfbfbf;
+}
+
+$focus: #485461;
+$base: #999;
+
+.form-item {
+  position: relative;
+  margin-bottom: 0.5em;
+
+  label,
+  input {
+    display: inline-block;
+    transition: all 150ms;
+    -webkit-appearance: none;
+  }
+
+  input {
+    -webkit-appearance: none;
+    border-radius: 0;
+    border: 0;
+
+    outline: 0;
+    margin-top: 8px;
+    padding: 6px 0;
+    background-image: linear-gradient(transparent, transparent);
+    border-bottom: 1px solid #485461;
+    line-height: 20px;
+    font-size: 14px;
+    color: #222;
+    cursor: auto;
+    width: 260px;
+
+    &:valid + label {
+      color: $base;
+      transform: translateY(-17px) scale(0.75);
+    }
+
+    &:focus + label {
+      color: $base;
+      transform: translateY(-17px) scale(0.75);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $focus;
+
+      + label {
+        color: $focus;
+      }
+    }
+  }
+
+  label {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    padding: 0 2px;
+    line-height: 20px;
+    font-size: 14px;
+    letter-spacing: 0.125em;
+    color: $base;
+    background: #fff;
+    pointer-events: none;
+    transform-origin: left center;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.mp3Button {
+  font-size: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.sunny {
+  width: 100%;
+  height: 220px;
+}
+
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  .card {
+    display: inline-block;
+    background: none !important;
+    border: none;
+    padding: 10px;
+
+    h5 {
+      margin: auto;
+      color: #fefefe;
+    }
+  }
 }
 
 .collapsed > .forecast-data .forecast-left .when-opened,
@@ -470,32 +677,60 @@ body {
 
 .forecast-left .when-opened,
 .forecast-left .when-closed {
-  font-size: 12px;
+  font-size: 13px;
   margin-right: 10px;
 }
 
 #app {
-  background-image: url('./assets/img/cold.jpg');
   background-size: cover;
   background-position: bottom;
   transition: 0.4s;
 }
-#app.warm {
-  background-image: url('./assets/img/warm.jpg'),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+
+.morning {
+  background: linear-gradient(130deg, #fdb813, #fdf86d, #a4bfef, #bddcf1);
+  background-size: 400% 400%;
 }
-#app.night {
-  background-image: url('./assets/img/night.jpg');
+
+.afternoon {
+  background: linear-gradient(130deg, #f39f86, #f9d976, #ee7752, #e73c7e);
+  background-size: 400% 400%;
 }
+
+.sunset {
+  background: linear-gradient(130deg, #fc575e, #ee7752, #923993, #1d2951);
+  background-size: 400% 400%;
+}
+
+
+.night {
+  background: linear-gradient(130deg, #485461, #0d324d, #7f5a83, #380036);
+  background-size: 400% 400%;
+}
+
 main {
-  min-height: 100vh;
-  padding: 25px;
-  background-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.2)
-  );
+  height: 100vh;
+  animation: gradient 15s ease infinite;
+  color: #fefefe;
 }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.nav-link {
+  padding: 1px 3px !important;
+  font-size: 14px;
+}
+
 .search-box {
   width: 100%;
   margin-bottom: 30px;
@@ -529,11 +764,8 @@ main {
 
 .forecast {
   height: 320px;
-  max-width: 400px;
-  background: rgba(0, 0, 0, 0.4);
-  margin: 0 auto;
+  width: 410px;
   border-radius: 5px;
-  color: #ffffff;
   font-size: 15px;
   position: relative;
 }
@@ -558,7 +790,6 @@ main {
 .forecast-body {
   overflow-y: auto;
   max-height: 330px;
-  padding: 20px 10px;
 }
 
 .forecast-content {
@@ -568,28 +799,27 @@ main {
 .forecast-content .forecast-data,
 .collapse-body .collapse-content {
   display: flex;
-  margin: 7px 15px 0 15px;
+  margin: 0 15px;
 }
 
 .collapse-body {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.1);
   padding: 5px 5px 10px 22px;
 }
 
 .collapse-content .left {
-  height: 30px;
+  height: 40px;
   flex: 2;
   font-size: 13px;
 }
 
 .collapse-content .right {
-  height: 30px;
+  height: 40px;
   flex: 0.6;
 }
 
 .collapse-content .right,
 .collapse-content .left {
-  // padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -597,7 +827,6 @@ main {
 
 .forecast div .forecast-left,
 .forecast div .forecast-right {
-  // padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -605,24 +834,18 @@ main {
 
 .forecast div .forecast-left {
   height: 40px;
-  // width: 70%;
   flex: 2;
 }
 
 .forecast div .forecast-right {
   height: 40px;
-  // width: 30%;
   flex: 0.6;
 }
 
-.forecast-img {
-  position: relative;
-  right: 40px;
-}
-
+.forecast-img,
 .upcoming-img {
   position: relative;
-  right: 42px;
+  right: 70px;
 }
 
 .result-content {
@@ -783,6 +1006,19 @@ main {
   100% {
     -webkit-transform: scale(1, 1);
     opacity: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .sunny {
+    height: 160px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  h1 {
+   font-size: 28px;
   }
 }
 </style>
