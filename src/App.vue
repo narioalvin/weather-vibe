@@ -240,7 +240,7 @@ export default {
       weatherApiUrlBase: 'https://api.openweathermap.org/data/2.5/',
       timezoneApiKey: 'XKNEC6T9OXH5',
       timezoneUrlBase: 'https://api.timezonedb.com/v2.1/get-time-zone',
-      ipstackUrlBase: 'http://api.ipstack.com/',
+      geoPlugin: 'https://www.geoplugin.net/json.gp',
       timezone: null,
       date: null,
       query: '',
@@ -282,7 +282,7 @@ export default {
     //     this.setResults(results);
     //   });
 
-    fetch(`http://www.geoplugin.net/json.gp`)
+    fetch(this.geoPlugin)
       .then((results) => {
         return results.json();
       })
