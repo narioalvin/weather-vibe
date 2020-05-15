@@ -26,8 +26,8 @@
         <g class="am-weather-cloud-2">
           <path
             d="M47.7,35.4c0-4.6-3.7-8.2-8.2-8.2c-1,0-1.9,0.2-2.8,0.5c-0.3-3.4-3.1-6.2-6.6-6.2c-3.7,0-6.7,3-6.7,6.7c0,0.8,0.2,1.6,0.4,2.3    c-0.3-0.1-0.7-0.1-1-0.1c-3.7,0-6.7,3-6.7,6.7c0,3.6,2.9,6.6,6.5,6.7l17.2,0C44.2,43.3,47.7,39.8,47.7,35.4z"
-            fill="#33ccff"
-            stroke="white"
+            fill="white"
+            stroke="#d9d9d9"
             stroke-linejoin="round"
             stroke-width="1.2"
             transform="translate(-20,-11)"
@@ -37,7 +37,7 @@
           <g transform="translate(3,28)">
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1.2"
               transform="translate(0,9), rotate(0)"
@@ -48,7 +48,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(45)"
@@ -59,7 +59,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(90)"
@@ -70,7 +70,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(135)"
@@ -85,7 +85,7 @@
           <g transform="translate(11,28)">
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1.2"
               transform="translate(0,9), rotate(0)"
@@ -96,7 +96,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(45)"
@@ -107,7 +107,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(90)"
@@ -118,7 +118,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(135)"
@@ -133,7 +133,7 @@
           <g transform="translate(20,28)">
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1.2"
               transform="translate(0,9), rotate(0)"
@@ -144,7 +144,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(45)"
@@ -155,7 +155,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(90)"
@@ -166,7 +166,7 @@
             />
             <line
               fill="none"
-              stroke="#33ccff"
+              stroke="white"
               stroke-linecap="round"
               stroke-width="1"
               transform="translate(0,9), rotate(135)"
@@ -191,9 +191,9 @@ export default {
   height: '',
   created() {
     if (this.size === 'large') {
-      this.viewBox = '0 0 50 50';
-      this.width = '80';
-      this.height = '80';
+   this.viewBox = '0 0 60 65';
+      this.width = '60';
+      this.height = '60';
     } else {
       this.viewBox = '0 0 55 55';
       this.width = '40';

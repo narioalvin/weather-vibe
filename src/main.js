@@ -5,7 +5,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { VBToggle, BButton, BCollapse, BSpinner } from 'bootstrap-vue';
+import { VBToggle, BButton, BCollapse, BSpinner, BTooltip, BModal, VBModal } from 'bootstrap-vue';
 
 import Cloudy from '@/components/gifs/Cloudy.vue';
 import CloudyDay3 from '@/components/gifs/CloudyDay3.vue';
@@ -25,6 +25,9 @@ Vue.component('b-collapse', BCollapse);
 Vue.component('b-button', BButton);
 Vue.directive('b-toggle', VBToggle);
 Vue.component('b-spinner', BSpinner);
+Vue.component('b-tooltip', BTooltip);
+Vue.component('b-modal', BModal)
+Vue.directive('b-modal', VBModal)
 
 Vue.component('CloudyDay3', CloudyDay3);
 Vue.component('Cloudy', Cloudy);
