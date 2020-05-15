@@ -75,9 +75,9 @@ export default {
   height: '',
   created() {
     if (this.size === 'large') {
-      this.viewBox = '0 0 50 50';
-      this.width = '80';
-      this.height = '80';
+    this.viewBox = '0 0 60 65';
+      this.width = '60';
+      this.height = '60';
     } else {
       this.viewBox = '0 0 55 55';
       this.width = '40';

@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'Night',
+  name: 'NightStars',
 };
 </script>
 
@@ -17,6 +17,7 @@ export default {
     height: 100vh;
     position: absolute;
     width: 100%;
+    overflow: hidden;
 
 @function multiple-box-shadow ($n)
   $value: '#{random(2000)}px #{random(2000)}px #FFF'
