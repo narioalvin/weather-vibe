@@ -1,3 +1,13 @@
+/*
+  CREDITS TO:
+  https://openweathermap.org/
+  https://timezonedb.com/
+  https://ipdata.co/
+  https://undraw.co/
+  https://codepen.io/saransh/pen/BKJun
+  https://www.amcharts.com/free-animated-svg-weather-icons/
+  https://codepen.io/nocni_sovac/details/eYNjjGW
+*/
 <template>
   <div @click="away()">
     <div class="loader" v-if="showLoader">
@@ -195,17 +205,6 @@
 </template>
 
 <script>
-/*
-  CREDITS TO:
-  https://openweathermap.org/
-  https://timezonedb.com/
-  https://ipdata.co/
-  https://undraw.co/
-  https://codepen.io/saransh/pen/BKJun
-  https://www.amcharts.com/free-animated-svg-weather-icons/
-  https://codepen.io/nocni_sovac/details/eYNjjGW
-*/
-
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
