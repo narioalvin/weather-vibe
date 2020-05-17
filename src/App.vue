@@ -220,12 +220,12 @@ export default {
   },
   data() {
     return {
-      weatherApiKey: '7d405bcc899a649d1f85f0ee632f9323',
+      weatherApiKey: process.env.VUE_APP_WEATHERAPIKEY,
       weatherApiUrlBase: 'https://api.openweathermap.org/data/2.5/',
-      timezoneApiKey: 'XKNEC6T9OXH5',
+      timezoneApiKey: process.env.VUE_APP_TIMEZONEAPIKEY,
       timezoneUrlBase: 'https://api.timezonedb.com/v2.1/get-time-zone',
       ipDataBaseUrl: 'https://api.ipdata.co',
-      ipDataKey: '9e8b416c07db1ba880742778045aebe3cce014a7958ba921aab8f10a',
+      ipDataKey: process.env.VUE_APP_IPDATAKEY,
       timezone: null,
       currentDate: null,
       query: '',
@@ -255,6 +255,8 @@ export default {
       centerImage: '',
       message: '',
     };
+
+    
 
     this.showLoader = true;
     this.showForecastLoader = true;
