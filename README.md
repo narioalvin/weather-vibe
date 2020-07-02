@@ -1,4 +1,7 @@
-# weather-vibe
+# Weather Vibe
+
+## Live
+[Click Me](https://narioalvin.github.io/weather-vibe/)
 
 ## Project setup
 ```
